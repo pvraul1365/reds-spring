@@ -1,6 +1,7 @@
 package com.rperezv.fib.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FibService {
 
+    @Cacheable("math:fib")
     public int getFib(int index) {
 
         log.info("Calculating fib({})", index);
