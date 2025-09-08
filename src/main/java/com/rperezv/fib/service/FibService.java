@@ -1,6 +1,7 @@
 package com.rperezv.fib.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FibService {
 
+    // hava a strategy for cache evict
     @Cacheable(value = "math:fib", key = "#index")
     public int getFib(int index) {
-
         log.info("Calculating fib({})", index);
 
         return fib(index);
+    }
+
+    // PUT / POST / PATCH / DELETE
+    @CacheEvict(value = "math:fib", key = "#index")
+    public void clearCache(int index) {
+        log.info("Clearing hash key cache");
     }
 
     // Naive recursive implementation of Fibonacci
