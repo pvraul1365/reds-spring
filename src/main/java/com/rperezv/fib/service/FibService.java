@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FibService {
 
-    @Cacheable("math:fib")
+    @Cacheable(value = "math:fib", key = "#index")
     public int getFib(int index) {
 
         log.info("Calculating fib({})", index);
