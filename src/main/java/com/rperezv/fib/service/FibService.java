@@ -3,6 +3,7 @@ package com.rperezv.fib.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,6 +31,12 @@ public class FibService {
     @CacheEvict(value = "math:fib", key = "#index")
     public void clearCache(int index) {
         log.info("Clearing hash key cache");
+    }
+
+    @Scheduled(fixedRate = 10_000) // every 5 minutes
+    @CacheEvict(value = "math:fib", allEntries = true)
+    public void clearCache() {
+        log.info("Clearing all fib keys");
     }
 
     // Naive recursive implementation of Fibonacci
