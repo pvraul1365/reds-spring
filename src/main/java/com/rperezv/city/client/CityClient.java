@@ -16,11 +16,11 @@ import reactor.core.publisher.Mono;
  * @since 1.17
  */
 @Component
-public class CityClass {
+public class CityClient {
 
     private final WebClient webClient;
 
-    public CityClass(@Value("${city.service.url}") String url) {
+    public CityClient(@Value("${city.service.url}") String url) {
         this.webClient = WebClient.builder()
                 .baseUrl(url)
                 .build();
