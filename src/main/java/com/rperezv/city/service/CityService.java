@@ -5,6 +5,7 @@ import com.rperezv.city.dto.City;
 import org.redisson.api.RMapReactive;
 import org.redisson.api.RedissonReactiveClient;
 import org.redisson.codec.TypedJsonJacksonCodec;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -20,11 +21,12 @@ import reactor.core.publisher.Mono;
 @Service
 public class CityService {
 
-    private final CityClient cityClient;
+    @Autowired
+    private CityClient cityClient;
+
     private RMapReactive<String, City> cityMap;
 
-    public CityService(RedissonReactiveClient client, CityClient cityClient) {
-        this.cityClient = cityClient;
+    public CityService(RedissonReactiveClient client) {
         this.cityMap = client.getMap("city", new TypedJsonJacksonCodec(String.class, City.class));
     }
 
