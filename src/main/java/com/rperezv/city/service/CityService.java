@@ -2,6 +2,8 @@ package com.rperezv.city.service;
 
 import com.rperezv.city.client.CityClient;
 import com.rperezv.city.dto.City;
+import java.util.concurrent.TimeUnit;
+import org.redisson.api.RMapCacheReactive;
 import org.redisson.api.RMapReactive;
 import org.redisson.api.RedissonReactiveClient;
 import org.redisson.codec.TypedJsonJacksonCodec;
@@ -24,10 +26,10 @@ public class CityService {
     @Autowired
     private CityClient cityClient;
 
-    private RMapReactive<String, City> cityMap;
+    private RMapCacheReactive<String, City> cityMap;
 
     public CityService(RedissonReactiveClient client) {
-        this.cityMap = client.getMap("city", new TypedJsonJacksonCodec(String.class, City.class));
+        this.cityMap = client.getMapCache("city", new TypedJsonJacksonCodec(String.class, City.class));
     }
 
     // get from cache
@@ -38,7 +40,7 @@ public class CityService {
         return this.cityMap.get(zipCode)
                 .switchIfEmpty(
                         this.cityClient.getCity(zipCode)
-                                .flatMap(city -> this.cityMap.fastPut(zipCode, city)
+                                .flatMap(city -> this.cityMap.fastPut(zipCode, city, 10, TimeUnit.SECONDS)
                                         .thenReturn(city))
                 );
     }
